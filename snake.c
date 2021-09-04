@@ -7,13 +7,13 @@ int snake_dir = RIGHT;
 
 void init_snake(void)
 {
-    struct node *nodes[8];
+    struct node *nodes[SNAKE_MIN_LENGTH];
     int i, x, y;
 
     x = 5;
     y = 5;
 
-    for (i = 0; i < 8; i++) {
+    for (i = 0; i < SNAKE_MIN_LENGTH; i++) {
         nodes[i] = (struct node *) malloc(sizeof(struct node));
 
         nodes[i]->x = x + i;
@@ -58,4 +58,40 @@ void update_snake(void)
 
             break;
     }
+}
+
+void insert_snake_node(int x, int y)
+{
+    struct node *new = (struct node *) malloc(sizeof(struct node));
+    new->x = x;
+    new->y = y;
+
+    switch (snake_dir) {
+        case UP:
+            new->y--;
+            break;
+        case DOWN:
+            new->y++;
+            break;
+        case LEFT:
+            new->x--;
+            break;
+        case RIGHT:
+            new->x++;
+            break;
+    }
+
+    new->next = NULL;
+
+    queue_push(&snake, new);
+}
+
+int snake_has_eaten(int apple_x, int apple_y)
+{
+    int x, y;
+
+    x = snake.last->x;
+    y = snake.last->y;
+
+    return x == apple_x && y == apple_y;
 }

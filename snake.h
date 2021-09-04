@@ -3,7 +3,7 @@
 
 #include "queue.h"
 
-#define MIN_LENGTH 3
+#define SNAKE_MIN_LENGTH 3
 
 enum direction {
     UP, DOWN,
@@ -15,5 +15,7 @@ extern int snake_dir;
 
 void init_snake(void);
 void update_snake(void);
+void insert_snake_node(int x, int y);
+int snake_has_eaten(int apple_x, int apple_y);
 
 #endif

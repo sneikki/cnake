@@ -6,7 +6,7 @@
 #include "apple.h"
 #include "snake.h"
 
-#define FPS 5
+#define FPS 15
 #define INPUT_RATE 60
 
 static double cur;
@@ -97,6 +97,11 @@ void update(void)
         cur = 0;
 
         update_snake();
+        if (snake_has_eaten(apple_x, apple_y)) {
+            insert_snake_node(apple_x, apple_y);
+            generate_apple(ARENA_WIDTH, ARENA_HEIGHT);
+            score++;
+        }
 
         erase();
         draw();
