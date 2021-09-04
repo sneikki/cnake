@@ -1,4 +1,4 @@
-src = snake.c queue.c
+src = main.c queue.c graphics.c game.c apple.c snake.c
 flags = -lncursesw
 output = lib/snake
 
