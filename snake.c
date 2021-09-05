@@ -3,7 +3,7 @@
 #include "snake.h"
 
 queue snake;
-int snake_dir = RIGHT;
+int snake_dir;
 
 void init_snake(void)
 {
@@ -21,6 +21,17 @@ void init_snake(void)
 
         queue_push(&snake, nodes[i]);
     }
+
+    snake_dir = RIGHT;
+}
+
+void empty_snake(void)
+{
+    struct node *p;
+
+    do {
+        free((p = queue_pop(&snake)));
+    } while (p);
 }
 
 void update_snake(void)
@@ -94,4 +105,42 @@ int snake_has_eaten(int apple_x, int apple_y)
     y = snake.last->y;
 
     return x == apple_x && y == apple_y;
+}
+
+int check_snake_location(int arena_width, int arena_height)
+{
+    int x, y;
+
+    x = snake.last->x;
+    y = snake.last->y;
+
+    return (x > arena_width || x < 1
+        || y > arena_height || y < 1);
+}
+
+int check_snake_collision(void)
+{
+    struct node *p = snake.first;
+    struct node *head = snake.last;
+    int x, y;
+
+    x = head->x;
+    y = head->y;
+
+    for (; p; p = p->next) {
+
+        if (p == head) {
+            continue;
+        }
+
+        int cx, cy;
+        cx = p->x;
+        cy = p->y;
+
+        if (x == cx && y == cy) {
+            return 1;
+        }
+    }
+
+    return 0;
 }

@@ -19,15 +19,23 @@ void init_graphics(void)
     clear();
 }
 
+int check_win_size(void)
+{
+    int wx, wy;
+
+    wx = getmaxx(stdscr);
+    wy = getmaxy(stdscr);
+
+    return !(wx < MIN_WINDOW_WIDTH || wy < MIN_WINDOW_HEIGHT);
+}
+
 void draw_arena(int width, int height)
 {
     attron(COLOR_PAIR(WALL_COLOR));
 
     int i, j;
 
-    width *= 2;
-
-    for (i = 0; i < width; i++) {
+    for (i = 0; i < width + 2; i++) {
         addstr("\u2585");
     }
     addstr("\n");
@@ -35,7 +43,7 @@ void draw_arena(int width, int height)
     for (j = 0; j < height; j++) {
         addstr("\u2588");
 
-        for (i = 0; i < width - 2; i++) {
+        for (i = 0; i < width; i++) {
             addch(' ');
         }
 
@@ -43,7 +51,7 @@ void draw_arena(int width, int height)
     }
 
     addstr("\u2588");
-    for (i = 0; i < width - 2; i++) {
+    for (i = 0; i < width; i++) {
         addstr("\u2585");
     }
     addstr("\u2588");
@@ -92,4 +100,15 @@ static void init_colors(void)
     init_pair(WALL_COLOR, WALL_COLOR, COLOR_BLACK);
     init_pair(SNAKE_COLOR, SNAKE_COLOR, COLOR_BLACK);
     init_pair(APPLE_COLOR, APPLE_COLOR, COLOR_BLACK);
+    init_pair(5, COLOR_WHITE, COLOR_RED);
+}
+
+void color_on(int color)
+{
+    attron(COLOR_PAIR(color));
+}
+
+void color_off(int color)
+{
+    attroff(COLOR_PAIR(WALL_COLOR));
 }
