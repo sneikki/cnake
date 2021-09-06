@@ -16,6 +16,7 @@ static int score;
 static int state = RUNNING;
 static int prev_state;
 static int dir_changed;
+static int grow_snake_next;
 
 int run(void)
 {
@@ -72,24 +73,16 @@ int input(void)
         case PAUSE_KEY:
             return state == GAME_OVER ? GAME_OVER : PAUSE;
         case UP_KEY:
-            if (snake_dir != DOWN && !dir_changed)
-                snake_dir = UP;
-                dir_changed = 1;
+            turn_snake(UP, DOWN, &dir_changed);
             break;
         case DOWN_KEY:
-            if (snake_dir != UP && !dir_changed)
-                snake_dir = DOWN;
-                dir_changed = 1;
+            turn_snake(DOWN, UP, &dir_changed);
             break;
         case LEFT_KEY:
-            if (snake_dir != RIGHT && !dir_changed)
-                snake_dir = LEFT;
-                dir_changed = 1;
+            turn_snake(LEFT, RIGHT, &dir_changed);
             break;
         case RIGHT_KEY:
-            if (snake_dir != LEFT && !dir_changed)
-                snake_dir = RIGHT;
-                dir_changed = 1;
+            turn_snake(RIGHT, LEFT, &dir_changed);
             break;
     }
 
@@ -117,9 +110,16 @@ void update(void)
         dir_changed = 0;
 
         if (!(state == PAUSE || state == GAME_OVER || state == INTERRUPT)) {
-            update_snake();
+            if (grow_snake_next) {
+                grow_snake_next = 0;
+                grow_snake();
+            } else {
+                update_snake();
+            }
+
             if (snake_has_eaten(apple_x, apple_y)) {
-                insert_snake_node(apple_x, apple_y);
+                grow_snake_next = 1;
+
                 generate_apple(ARENA_WIDTH, ARENA_HEIGHT);
 
                 if (++score % 5 == 0) {
