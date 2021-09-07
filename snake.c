@@ -5,7 +5,7 @@
 queue snake;
 int snake_dir;
 
-void init_snake(void)
+int init_snake(void)
 {
     struct node *nodes[SNAKE_MIN_LENGTH];
     int i, x, y;
@@ -15,6 +15,9 @@ void init_snake(void)
 
     for (i = 0; i < SNAKE_MIN_LENGTH; i++) {
         nodes[i] = (struct node *) malloc(sizeof(struct node));
+        if (!nodes[i]) {
+            return 0;
+        }
 
         nodes[i]->x = x + i;
         nodes[i]->y = y;
@@ -23,6 +26,7 @@ void init_snake(void)
     }
 
     snake_dir = RIGHT;
+    return 1;
 }
 
 void empty_snake(void)
@@ -90,10 +94,15 @@ void insert_snake_node(struct node *new)
     }
 }
 
-void grow_snake(void)
+int grow_snake(void)
 {
     struct node *new = (struct node *) malloc(sizeof(struct node));
+    if (!new) {
+        return 0;
+    }
+
     insert_snake_node(new);
+    return 1;
 }
 
 int snake_has_eaten(int apple_x, int apple_y)

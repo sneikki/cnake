@@ -28,7 +28,7 @@ enum {
 int run(void);
 int process(void);
 int input(void);
-void update(void);
+int update(void);
 void draw(void);
 
 #endif

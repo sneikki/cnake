@@ -23,7 +23,9 @@ int run(void)
     timeout(1000.0 / INPUT_RATE);
 
     generate_apple(ARENA_WIDTH, ARENA_HEIGHT);
-    init_snake();
+    if (!init_snake()) {
+        return QUIT;
+    }
 
     while (true) {
         if (process() == QUIT) {
@@ -56,7 +58,9 @@ int process(void)
             break;
     }
 
-    update();
+    if (!update()) {
+        return QUIT;
+    }
 
     return RUNNING;
 }
@@ -89,7 +93,7 @@ int input(void)
     return RUNNING;
 }
 
-void update(void)
+int update(void)
 { 
     if (!check_win_size()) {
 
@@ -112,7 +116,9 @@ void update(void)
         if (!(state == PAUSE || state == GAME_OVER || state == INTERRUPT)) {
             if (grow_snake_next) {
                 grow_snake_next = 0;
-                grow_snake();
+                if (!grow_snake()) {
+                    return 0;
+                }
             } else {
                 update_snake();
             }
@@ -137,17 +143,17 @@ void update(void)
         draw();
         refresh();
     }
+
+    return 1;
 }
 
 void draw(void)
 {
     draw_arena(ARENA_WIDTH, ARENA_HEIGHT);
 
-    /* print score */
     sprintf(text_buffer, "\n\n  Score: %d", score);
     draw_text(text_buffer);
 
-    // sprintf(text_buffer, "\nr - restart\nq - quit");
     draw_text("\n\n  r - restart\n  q - quit");
 
     if (state == GAME_OVER) {
