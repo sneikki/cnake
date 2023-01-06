@@ -1,6 +1,6 @@
-# CSnake
+# cnake
 
-A simple snake game written in C.
+A simple snake game written in C with ncurses.
 
 ## Building
 
